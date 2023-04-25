@@ -11,12 +11,16 @@ def main():
     bg_img = pg.image.load("ex02/fig/pg_bg.jpg")
     kk_img = pg.image.load("ex02/fig/3.png")
     kk_img = pg.transform.rotozoom(kk_img, 0, 2.0)
-    tmr = 0
     bb_img = pg.Surface((20, 20))
     pg.draw.circle(bb_img, (255, 0, 0), (10, 10), 10)
     bb_img.set_colorkey((0, 0, 0))
+    bb_rct = bb_img.get_rect()
+
     x = random.randint(0, 1600)
     y = random.randint(0, 900)
+    vx = 1
+    vy = 1
+    tmr = 0
 
 
     while True:
@@ -27,7 +31,8 @@ def main():
         tmr += 1
         screen.blit(bg_img, [0, 0])
         screen.blit(kk_img, [900, 400])
-        screen.blit(bb_img, [x, y])
+        screen.blit(bb_img, bb_rct)
+        bb_rct.move_ip(vx, vy)
 
         pg.display.update()
         clock.tick(1000)
