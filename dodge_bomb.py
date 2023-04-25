@@ -15,9 +15,11 @@ def main():
     pg.draw.circle(bb_img, (255, 0, 0), (10, 10), 10)
     bb_img.set_colorkey((0, 0, 0))
     bb_rct = bb_img.get_rect()
+    
 
     x = random.randint(0, 1600)
     y = random.randint(0, 900)
+    bb_rct.center = (x, y)
     vx = 1
     vy = 1
     tmr = 0
