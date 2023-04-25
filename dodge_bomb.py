@@ -33,11 +33,14 @@ def main():
     bg_img = pg.image.load("ex02/fig/pg_bg.jpg")
     kk_img = pg.image.load("ex02/fig/3.png")
     kk_img = pg.transform.rotozoom(kk_img, 0, 2.0)
+    kk_bk_img = pg.transform.flip(kk_img, True, False)
     kk_rct = kk_img.get_rect()
+    gli_chi = pg.image.load("ex02/fig/yakitori.jpeg")
     bb_img = pg.Surface((20, 20))
     pg.draw.circle(bb_img, (255, 0, 0), (10, 10), 10)
     bb_img.set_colorkey((0, 0, 0))
     bb_rct = bb_img.get_rect()
+    mv_dir = (-1, 0)    # 始めのこうかとんの向き
     
     x = random.randint(0, 1600)
     y = random.randint(0, 900)
@@ -47,6 +50,16 @@ def main():
     vy = 1
     tmr = 0
 
+    kk_dir = {
+         (-1, 0): kk_img,
+         (-1, 1): pg.transform.rotate(kk_img, 45),
+         (0, 1): pg.transform.rotate(kk_bk_img, 270),
+         (1, 1): pg.transform.rotate(kk_bk_img, 45),
+         (1, 0): kk_bk_img,
+         (1, -1): pg.transform.rotate(kk_bk_img, 315),
+         (0, -1): pg.transform.rotate(kk_bk_img, 90),
+         (-1, -1): pg.transform.rotate(kk_img, 45),
+         }  # こうかとんの傾きとキーを対応させた辞書
 
     while True:
         for event in pg.event.get():
@@ -59,14 +72,16 @@ def main():
         for k, mv in delta.items():
             if key_lst[k]:
                 kk_rct.move_ip(mv)
+                #mv_dir = (mv_dir[0] + mv[0], mv_dir[1] + mv[1]) #  進行方向をmv_dirに代入
         if check_bound(screen.get_rect(), kk_rct) != (True, True):
             for k, mv in delta.items():
                 if key_lst[k]:
                     kk_rct.move_ip(-mv[0], -mv[1])
+                    mv_dir = (-mv[0], -mv[1]) #  進行方向をmv_dirに代入
 
         screen.blit(bg_img, [0, 0])
-        screen.blit(kk_img, kk_rct)
         screen.blit(bb_img, bb_rct)
+        screen.blit(kk_dir[mv_dir], kk_rct) #kk_dirに応じた向きのこうかとんを出力
         bb_rct.move_ip(vx, vy)
         yoko, tate = check_bound(screen.get_rect(), bb_rct)
         if not yoko:    # 横がはみ出ていたら
@@ -75,6 +90,10 @@ def main():
             vy *= -1
         screen.blit(bb_img, bb_rct)
         if kk_rct.colliderect(bb_rct):
+            screen.blit(bg_img, [0, 0])
+            screen.blit(gli_chi, kk_rct)
+            pg.display.update()
+            pg.time.delay(50000)
             return
 
         pg.display.update()
