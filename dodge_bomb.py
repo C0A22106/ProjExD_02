@@ -1,5 +1,8 @@
-import pygame as pg
+import random
 import sys
+
+import pygame as pg
+
 
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
@@ -22,7 +25,7 @@ def main():
         tmr += 1
         screen.blit(bg_img, [0, 0])
         screen.blit(kk_img, [900, 400])
-        screen.blit(bb_img, [600, 500])
+        screen.blit(bb_img, [random.randint(0, 1600), random.randint(0, 900)])
 
         pg.display.update()
         clock.tick(1000)
