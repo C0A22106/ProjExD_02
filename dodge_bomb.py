@@ -40,10 +40,11 @@ def main():
     pg.draw.circle(bb_img, (255, 0, 0), (10, 10), 10)
     bb_img.set_colorkey((0, 0, 0))
     bb_rct = bb_img.get_rect()
-    mv_dir = (-1, 0)    # 始めのこうかとんの向き
     
     x = random.randint(0, 1600)
     y = random.randint(0, 900)
+    x_mov = -1
+    y_mov = 0
     bb_rct.center = (x, y)
     kk_rct.center = (900, 400)
     vx = 1
@@ -72,16 +73,18 @@ def main():
         for k, mv in delta.items():
             if key_lst[k]:
                 kk_rct.move_ip(mv)
-                #mv_dir = (mv_dir[0] + mv[0], mv_dir[1] + mv[1]) #  進行方向をmv_dirに代入
+            x_mov += mv[0]
+            y_mov += mv[1]
         if check_bound(screen.get_rect(), kk_rct) != (True, True):
             for k, mv in delta.items():
                 if key_lst[k]:
                     kk_rct.move_ip(-mv[0], -mv[1])
-                    mv_dir = (-mv[0], -mv[1]) #  進行方向をmv_dirに代入
+            x_mov += -mv[0]
+            y_mov += -mv[1]
 
         screen.blit(bg_img, [0, 0])
         screen.blit(bb_img, bb_rct)
-        screen.blit(kk_dir[mv_dir], kk_rct) #kk_dirに応じた向きのこうかとんを出力
+        screen.blit(kk_img, kk_rct) #kk_dirに応じた向きのこうかとんを出力
         bb_rct.move_ip(vx, vy)
         yoko, tate = check_bound(screen.get_rect(), bb_rct)
         if not yoko:    # 横がはみ出ていたら
@@ -93,8 +96,8 @@ def main():
             screen.blit(bg_img, [0, 0])
             screen.blit(gli_chi, kk_rct)
             pg.display.update()
-            pg.time.delay(50000)
-            return
+            pg.time.delay(500)
+            return 0
 
         pg.display.update()
         clock.tick(1000)
